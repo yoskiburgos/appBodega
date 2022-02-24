@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+        environment {
+        //once you sign up for Docker hub, use that user_id here
+        registry = "361166677709.dkr.ecr.us-east-1.amazonaws.com/aw-con-ecsrep-ue1-dev-al-botbodegas-06"
+        //- update your credentials ID after creating credentials for connecting to Docker Hub
+        registryCredential = 'dockerhub'
+        dockerImage = ''
+    }
+    stages {
+        
+         stage ('checkout') {
+            steps {
+              checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/yoskidavid/appBodega.git']]])
+            }
+        }
+        
+        stage ('Docker Build') {
+            steps {
+                script {
+                //dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                dockerImage = docker.build registry 
+
+                }
+            }
+        }
+        
+        
+    }
+}
